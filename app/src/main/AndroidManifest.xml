@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.test_lab_week_12">
 
-    <!-- Internet permission for API request -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,25 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TEST_LAB_WEEK_12">
 
-        <!-- DETAIL ACTIVITY -->
+        <!-- Details Activity (Back Button enabled) -->
         <activity
             android:name=".DetailsActivity"
+            android:exported="false"
             android:parentActivityName=".MainActivity">
 
-            <!-- This enables the automatic back arrow -->
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
+                android:name="androidx.appcompat.app.AppCompatActivity.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+
         </activity>
 
-        <!-- MAIN ACTIVITY -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
     </application>
