@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
-    // define the StateFlow in replace of the LiveData
     private val _popularMovies = MutableStateFlow(
         emptyList<Movie>()
     )
@@ -24,18 +24,23 @@ class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel()
         fetchPopularMovies()
     }
 
-    // fetch movies from the API
     private fun fetchPopularMovies() {
-        // launch a coroutine in viewModelScope
         viewModelScope.launch(Dispatchers.IO) {
             movieRepository.fetchMovies()
                 .catch {
-                    // catch exceptions from the Flow
                     _error.value = "An exception occurred: ${it.message}"
                 }
                 .collect { movies ->
-                    // emit results to the StateFlow
-                    _popularMovies.value = movies
+
+                    val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
+
+                    val filtered = movies
+                        .filter { movie ->
+                            movie.releaseDate?.startsWith(currentYear) == true
+                        }
+                        .sortedByDescending { it.popularity }
+
+                    _popularMovies.value = filtered
                 }
         }
     }
